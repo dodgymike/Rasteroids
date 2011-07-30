@@ -1,0 +1,12 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    chipmunk (5.3.4.4)
+    gosu (0.7.33)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  chipmunk
+  gosu

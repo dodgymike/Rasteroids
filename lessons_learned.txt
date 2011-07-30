@@ -1,0 +1,4 @@
+Lessons learned while playing with Gosu:
+- c bindings
+  - segfaults
+  - image loading not reliable
