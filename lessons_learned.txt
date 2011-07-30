@@ -2,3 +2,9 @@ Lessons learned while playing with Gosu:
 - c bindings
   - segfaults
   - image loading not reliable
+- asteroids not appearing
+  - don't forget to check the image rv
+- images
+  - Gimp 
+    - use RGB bmp - jpg convertor doesn't work with transparent backgrounds
+
