@@ -1,4 +1,10 @@
+Images:
+http://www.fotosearch.com/IMZ145/sha0002/
+http://galacticfool.com/asteroids-meteors-comets/
+
 Lessons learned while playing with Gosu:
+https://github.com/jlnr/gosu/wiki/Ruby-Tutorial
+https://github.com/jlnr/gosu/wiki/Basic-Concepts
 - c bindings
   - segfaults
   - image loading not reliable
@@ -8,3 +14,14 @@ Lessons learned while playing with Gosu:
   - Gimp 
     - use RGB bmp - jpg convertor doesn't work with transparent backgrounds
 
+Chipmunk:
+6.0.1
+library install: http://wiki.slembcke.net/main/published/Chipmunk
+ruby lib: https://github.com/jlnr/gosu/wiki/Ruby-Chipmunk-Integration
+docs: http://files.slembcke.net/chipmunk/release/ChipmunkLatest-Docs/
+
+  Ubuntu:
+	install GLUT, libxmu, cmake
+	- cmake .
+	- hack Demo/Buoyancy.c line 132
+	- sudo gem install chipmunk
