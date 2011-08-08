@@ -31,9 +31,29 @@ class GameWindow < Gosu::Window
 
     @background_image = Gosu::Image.new(self, "media/Space.bmp", true)
     @asteroids = create_asteroids()
+    @asteroids += create_asteroids
 
     @player = Player.new(Gosu::Image.new(self, "media/Starfighter.bmp", false), @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT)
     @player.warp(CP::Vec2.new(320, 240))
+
+    # Here we define what is supposed to happen when a Player (ship) collides with a Star
+    # I create a @remove_shapes array because we cannot remove either Shapes or Bodies
+    # from Space within a collision closure, rather, we have to wait till the closure
+    # is through executing, then we can remove the Shapes and Bodies
+    # In this case, the Shapes and the Bodies they own are removed in the Gosu::Window.update phase
+    # by iterating over the @remove_shapes array
+    # Also note that both Shapes involved in the collision are passed into the closure
+    # in the same order that their collision_types are defined in the add_collision_func call
+    @asteroids_to_split = []
+    @players_with_collisions = []
+
+    @space.add_collision_func(:player, :asteroid) do |player_shape, asteroid_shape|
+      puts "Collision between player (#{player_shape}) and asteroid (#{asteroid_shape})"
+
+      @score += 10
+      @asteroids_to_split << asteroid_shape
+      @players_with_collisions << player_shape
+    end
 
     @dt = (1.0/60.0)
 
@@ -60,6 +80,9 @@ class GameWindow < Gosu::Window
     end
 
     @player.validate_position
+    @asteroids.each do |asteroid|
+      asteroid.validate_position
+    end
 
     @space.step(@dt)
     @player.shape.body.reset_forces

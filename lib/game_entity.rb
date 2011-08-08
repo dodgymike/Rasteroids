@@ -17,11 +17,11 @@ class GameEntity
       raise "nil image passed"
     end
 
-    @circle_offset = CP::Vec2.new(0,0)
-
     @body = CP::Body.new(100, 10)
-    @shape = CP::Shape::Circle.new(@body, 32, @circle_offset)
+    create_collision_shape()
+
     @body.add_to_space(space)
+    @shape.add_to_space(space)
 
     @shape.body.p = CP::Vec2.new(0.0, 0.0) # position
     @shape.body.v = CP::Vec2.new(0.0, 0.0) # velocity
@@ -33,6 +33,18 @@ class GameEntity
 
     @max_x_coord = max_x_coord
     @max_y_coord = max_y_coord
+  end
+
+  def create_collision_shape
+    @circle_offset = CP::Vec2.new(0,0)
+
+    shape_radius = ((@image.width > @image.height) ? @image.width : @image.height) / 2
+    @shape = CP::Shape::Circle.new(@body, shape_radius, @circle_offset)
+
+    # The collision_type of a shape allows us to set up special collision behavior
+    # based on these types. The actual value for the collision_type is arbitrary
+    # and, as long as it is consistent, will work for us; of course, it helps to have it make sense
+    @shape.collision_type = :player
   end
 
   # Directly set the position of our Player
