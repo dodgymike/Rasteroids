@@ -29,3 +29,12 @@ docs: http://files.slembcke.net/chipmunk/release/ChipmunkLatest-Docs/
 - documentation for ruby bindings is not great
   - https://github.com/jlnr/gosu/blob/master/examples/ChipmunkIntegration.rb (for good examples of gosu/chipmunk integration)
   - look at c docs
+
+- collisions
+  - 'shapes' are crucial - define collision boundaries
+  - circle 'shapes' are quite usable, poly 'shapes' require some thinking
+  - don't forget to assign a shape 'type', otherwise collision functions won't work
+
+
+General:
+- pp is the enemy of performance

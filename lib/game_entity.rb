@@ -10,14 +10,19 @@ class GameEntity
 
   attr :shape
 
-  def initialize(image, space, max_x_coord, max_y_coord)
-    @image = image
+  def initialize(window, image_name, space, max_x_coord, max_y_coord, scale)
+    @scale = scale
+    @window = window
+    @space = space
 
-    if image.nil?
+    @image_name = image_name
+    @image = Gosu::Image.new(@window, image_name, false)
+
+    if @image.nil?
       raise "nil image passed"
     end
 
-    @body = CP::Body.new(100, 10)
+    @body = CP::Body.new(50 * (scale ** 2), 50 * (scale ** 2))
     create_collision_shape()
 
     @body.add_to_space(space)
@@ -35,16 +40,41 @@ class GameEntity
     @max_y_coord = max_y_coord
   end
 
+  def suicide
+    @body.remove_from_space(@space)
+    @shape.remove_from_space(@space)
+  end
+
+  def mini_me
+    mini_me_scale = @scale / 2.0
+
+    # sanity check
+    if mini_me_scale <= 0.1
+      return nil
+    end
+
+    new_entity = self.class.new @window, @image_name, @space, @max_x_coord, @max_y_coord, mini_me_scale
+    new_entity.shape.body.p = @body.p
+    new_entity.shape.body.t = @body.t
+    new_entity.shape.body.v = @body.v
+
+    new_entity
+  end
+
+  def collision_name
+    raise "Should be overloaded"
+  end
+
   def create_collision_shape
     @circle_offset = CP::Vec2.new(0,0)
 
-    shape_radius = ((@image.width > @image.height) ? @image.width : @image.height) / 2
+    shape_radius = (((@image.width > @image.height) ? @image.width : @image.height) / 2) * @scale
     @shape = CP::Shape::Circle.new(@body, shape_radius, @circle_offset)
 
     # The collision_type of a shape allows us to set up special collision behavior
     # based on these types. The actual value for the collision_type is arbitrary
     # and, as long as it is consistent, will work for us; of course, it helps to have it make sense
-    @shape.collision_type = :player
+    @shape.collision_type = collision_name
   end
 
   # Directly set the position of our Player
@@ -95,7 +125,7 @@ class GameEntity
   end
 
   def draw
-    @image.draw_rot(@shape.body.p.x, @shape.body.p.y, ZOrder::Player, @shape.body.a.radians_to_gosu)
+    @image.draw_rot(@shape.body.p.x, @shape.body.p.y, ZOrder::Player, @shape.body.a.radians_to_gosu, 0.5, 0.5, @scale, @scale)
   end
 
   def random_rotation

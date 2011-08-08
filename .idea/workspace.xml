@@ -23,10 +23,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="gosu_1.rb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="gosu_1.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bin/gosu_1.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="32" selection-start="2518" selection-end="2518" vertical-scroll-proportion="0.0">
+            <state line="39" column="106" selection-start="891" selection-end="891" vertical-scroll-proportion="0.39823008">
               <folding />
             </state>
           </provider>
@@ -35,7 +35,7 @@
       <file leaf-file-name="asteroid.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/asteroid.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="21" selection-start="91" selection-end="91" vertical-scroll-proportion="0.0">
+            <state line="6" column="0" selection-start="139" selection-end="139" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -44,16 +44,25 @@
       <file leaf-file-name="player.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/player.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="0" selection-start="70" selection-end="70" vertical-scroll-proportion="0.0">
+            <state line="3" column="6" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="game_entity.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="game_entity.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/game_entity.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="54" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.5022124">
+            <state line="24" column="30" selection-start="647" selection-end="647" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lessons_learned.txt" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lessons_learned.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="39" column="32" selection-start="1256" selection-end="1256" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -83,10 +92,11 @@
         <option value="$PROJECT_DIR$/bin/jukebox_client.rb" />
         <option value="$PROJECT_DIR$/bin/jukebox_server.rb" />
         <option value="$PROJECT_DIR$/Gemfile" />
-        <option value="$PROJECT_DIR$/lib/asteroid.rb" />
         <option value="$PROJECT_DIR$/lib/player.rb" />
-        <option value="$PROJECT_DIR$/bin/gosu_1.rb" />
+        <option value="$PROJECT_DIR$/lib/asteroid.rb" />
         <option value="$PROJECT_DIR$/lib/game_entity.rb" />
+        <option value="$PROJECT_DIR$/lessons_learned.txt" />
+        <option value="$PROJECT_DIR$/bin/gosu_1.rb" />
       </list>
     </option>
   </component>
@@ -347,11 +357,6 @@
         <state line="4" column="8" selection-start="50" selection-end="50" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/asteroid.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="21" selection-start="91" selection-end="91" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/rubystubs18/object.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="176" column="11" selection-start="5956" selection-end="5956" vertical-scroll-proportion="0.3329646">
@@ -359,28 +364,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/ruby/gems/1.8/gems/chipmunk-5.3.4.4/lib/chipmunk.rb">
+    <entry file="file://$PROJECT_DIR$/lib/player.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="9" selection-start="1003" selection-end="1003" vertical-scroll-proportion="0.3329646">
+        <state line="3" column="6" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/player.rb">
+    <entry file="file://$PROJECT_DIR$/lib/asteroid.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="70" selection-end="70" vertical-scroll-proportion="0.0" />
+        <state line="6" column="0" selection-start="139" selection-end="139" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/gosu_1.rb">
+    <entry file="file:///usr/lib/ruby/gems/1.8/gems/chipmunk-5.3.4.4/lib/chipmunk.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="32" selection-start="2518" selection-end="2518" vertical-scroll-proportion="0.0">
+        <state line="59" column="8" selection-start="1862" selection-end="1862" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/game_entity.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="54" selection-start="1288" selection-end="1288" vertical-scroll-proportion="0.5022124">
+        <state line="24" column="30" selection-start="647" selection-end="647" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lessons_learned.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="32" selection-start="1256" selection-end="1256" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/gosu_1.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="106" selection-start="891" selection-end="891" vertical-scroll-proportion="0.39823008">
           <folding />
         </state>
       </provider>
