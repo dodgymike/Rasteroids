@@ -27,12 +27,13 @@ class GameWindow < Gosu::Window
     self.caption = "Gosu Tutorial Game"
 
     @space = CP::Space.new
+    #@space.damping = 0.8
 
     @background_image = Gosu::Image.new(self, "media/Space.bmp", true)
     @asteroids = create_asteroids()
 
-    @player = Player.new(Gosu::Image.new(self, "media/Starfighter.bmp", false), @space)
-    @player.warp(320, 240)
+    @player = Player.new(Gosu::Image.new(self, "media/Starfighter.bmp", false), @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT)
+    @player.warp(CP::Vec2.new(320, 240))
 
     @dt = (1.0/60.0)
 
@@ -40,15 +41,25 @@ class GameWindow < Gosu::Window
   end
 
   def update
-    if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft then
+    # Check keyboard
+    if button_down? Gosu::KbLeft
       @player.turn_left
     end
-    if button_down? Gosu::KbRight or button_down? Gosu::GpRight then
+    if button_down? Gosu::KbRight
       @player.turn_right
     end
-    if button_down? Gosu::KbUp or button_down? Gosu::GpButton0 then
-      @player.accelerate
+
+    if button_down? Gosu::KbUp
+      if ( (button_down? Gosu::KbRightShift) || (button_down? Gosu::KbLeftShift) )
+        @player.boost
+      else
+        @player.accelerate
+      end
+    elsif button_down? Gosu::KbDown
+      @player.reverse
     end
+
+    @player.validate_position
 
     @space.step(@dt)
     @player.shape.body.reset_forces
@@ -80,9 +91,9 @@ class GameWindow < Gosu::Window
       asteroid_image_name = "media/asteroid-#{index}.bmp"
       puts "asteroid_image_name (#{asteroid_image_name})"
       asteroid_image = Gosu::Image.new(self, asteroid_image_name, false)
-      asteroid = Asteroid.new(asteroid_image, @space)
+      asteroid = Asteroid.new(asteroid_image, @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT)
 
-      asteroid.warp(rand(GAME_WINDOW_WIDTH), rand(GAME_WINDOW_HEIGHT))
+      asteroid.warp(CP::Vec2.new(rand(GAME_WINDOW_WIDTH), rand(GAME_WINDOW_HEIGHT)))
       asteroid.random_rotation
 
       asteroid
