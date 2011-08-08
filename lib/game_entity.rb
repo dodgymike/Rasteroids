@@ -1,44 +1,51 @@
 require 'gosu'
+require 'chipmunk'
 
 class GameEntity
-  def initialize(window, image)
+  # The number of steps to process every Gosu update
+  # The Player ship can get going so fast as to "move through" a
+  # star without triggering a collision; an increased number of
+  # Chipmunk step calls per update will effectively avoid this issue
+  SUBSTEPS = 6
+
+  attr :shape
+
+  def initialize(image, space)
     @image = image
 
     if image.nil?
       raise "nil image passed"
     end
 
-    @x = @y = @vel_x = @vel_y = @angle = 0.0
+    @circle_offset = CP::Vec2.new(0,0)
+
+    @body = CP::Body.new(100, 10)
+    @shape = CP::Shape::Circle.new(@body, 32, @circle_offset)
+    @body.add_to_space(space)
   end
 
   def warp(x, y)
-    @x, @y = x, y
+    @body.p.x= x
+    @body.p.y= y
   end
 
   def turn_left
-    @angle -= 4.5
+    @body.t -= 400.0/SUBSTEPS
   end
 
   def turn_right
-    @angle += 4.5
+    @body.t += 400.0/SUBSTEPS
   end
 
   def accelerate
-    @vel_x += Gosu::offset_x(@angle, 0.5)
-    @vel_y += Gosu::offset_y(@angle, 0.5)
+    @shape.body.apply_force((@shape.body.a.radians_to_vec2 * (3000.0/SUBSTEPS)), CP::Vec2.new(0.0, 0.0))
   end
 
-  def move
-    @x += @vel_x
-    @y += @vel_y
-    @x %= 640
-    @y %= 480
-
-    @vel_x *= 0.95
-    @vel_y *= 0.95
+  def random_rotation
+    @body.t += (rand(5000000.0) - 2500000)/SUBSTEPS
   end
 
   def draw
-    @image.draw_rot(@x, @y, 1, @angle)
+    @image.draw_rot(@body.p.x, @body.p.y, 1, @body.a)
   end
 end

@@ -25,3 +25,7 @@ docs: http://files.slembcke.net/chipmunk/release/ChipmunkLatest-Docs/
 	- cmake .
 	- hack Demo/Buoyancy.c line 132
 	- sudo gem install chipmunk
+
+- documentation for ruby bindings is not great
+  - https://github.com/jlnr/gosu/blob/master/examples/ChipmunkIntegration.rb (for good examples of gosu/chipmunk integration)
+  - look at c docs
