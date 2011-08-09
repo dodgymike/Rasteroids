@@ -12,11 +12,10 @@ class GameEntity
   attr_accessor :entity_id
   attr_accessor :scale
 
-  def initialize(window, entity_id, width, height, space, max_x_coord, max_y_coord, scale)
+  def initialize(entity_id, width, height, space, max_x_coord, max_y_coord, scale)
     @width = width
     @height = height
     @scale = scale
-    @window = window
     @space = space
 
     if !entity_id.nil?
@@ -59,7 +58,7 @@ class GameEntity
       return nil
     end
 
-    new_entity = self.class.new @window, @entity_id, @width, @height, @space, @max_x_coord, @max_y_coord, mini_me_scale
+    new_entity = self.class.new @entity_id, @width, @height, @space, @max_x_coord, @max_y_coord, mini_me_scale
     new_entity.shape.body.p = @body.p
     new_entity.shape.body.t = @body.t
     new_entity.shape.body.v = @body.v

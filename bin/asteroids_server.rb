@@ -1,16 +1,15 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/ruby -w
 # server
 
 require 'drb'
-require 'lib/asteroid.rb'
-require 'lib/bullet.rb'
-require 'lib/game_entity.rb'
-require 'lib/player.rb'
 
-class GameServer
-end
+require 'lib/player'
+require 'lib/asteroid'
+require 'lib/bullet'
+require 'lib/game_entity'
+require 'lib/game_server'
 
-DRb.start_service nil, DistCalc.new
+DRb.start_service 'druby://:9000', GameServer.new
 puts DRb.uri
 
 DRb.thread.join

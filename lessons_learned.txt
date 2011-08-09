@@ -54,6 +54,15 @@ built-in
 - follow http://segment7.net/projects/ruby/drb/introduction.html
 - not sure about chipmunk classes across drb - maybe use drbundumped?
 
+- first attempt seriously slow
+- "0x3fe7ac37fc98 is recycled object (RangeError)"
+  - http://627nm.blogspot.com/2009/04/drb-and-rangeerror.html
+  - passing a drb object into a drb 'service call' causes major pain
+    - if that object adds itself to anything on the server side, its lifecycle is screwed
+    - bullets have players, call player.shoot creates a bullet with the player as an attribute
+      which is actually a drb *remote* object and is not valid/accessible locally :/
+  - while developing, *always* use a fixed URL
+
 General:
 - console output is the enemy of performance - especially pp in the event loop
 - try your best to keep game logic separate from display logic for multiplayer games

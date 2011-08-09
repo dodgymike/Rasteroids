@@ -8,8 +8,8 @@ class Player < GameEntity
   attr_accessor :score
   attr_accessor :lives
 
-  def initialize(window, image_name, width, height, space, max_x_coord, max_y_coord, scale)
-    super(window, image_name, width, height, space, max_x_coord, max_y_coord, scale)
+  def initialize(image_name, width, height, space, max_x_coord, max_y_coord, scale)
+    super(image_name, width, height, space, max_x_coord, max_y_coord, scale)
 
     @score = 0
     @lives = 10
@@ -20,7 +20,7 @@ class Player < GameEntity
   end
 
   def shoot
-    bullet = Bullet.new self, @window, "media/bullet.bmp", 16, 16, @space, @max_x_coord, @max_y_coord, @scale
+    bullet = Bullet.new self, "media/bullet.bmp", 16, 16, @space, @max_x_coord, @max_y_coord, @scale
 
     bullet_angle = -@shape.body.a + Math::PI / 2
     bullet_speed = 100 * @scale

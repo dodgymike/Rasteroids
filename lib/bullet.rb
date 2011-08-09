@@ -1,10 +1,10 @@
 class Bullet < GameEntity
   COLLISION_NAME = :bullet
 
-  attr :player
+  attr_accessor :player
 
-  def initialize(player, window, image_name, width, height, space, max_x_coord, max_y_coord, scale)
-    super(window, image_name, width, height, space, max_x_coord, max_y_coord, scale)
+  def initialize(player, image_name, width, height, space, max_x_coord, max_y_coord, scale)
+    super(image_name, width, height, space, max_x_coord, max_y_coord, scale)
 
     @player = player
   end

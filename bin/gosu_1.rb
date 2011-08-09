@@ -1,5 +1,6 @@
 #!/usr/bin/ruby -w
 
+require 'drb'
 require 'gosu'
 require 'lib/player'
 require 'lib/asteroid'
@@ -17,7 +18,7 @@ class GameWindow < Gosu::Window
   GAME_WINDOW_WIDTH = 640
   GAME_WINDOW_HEIGHT = 480
 
-  def initialize
+  def initialize game_server
     super(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, false)
     self.caption = "Capetown.rb Asteroids"
 
@@ -29,7 +30,7 @@ class GameWindow < Gosu::Window
     @min_keypress_time = 0.200
     @last_keypress_time = Time.now.to_f
 
-    @game_server = GameServer.new
+    @game_server = game_server
 
     @image_cache = {}
 
@@ -66,7 +67,7 @@ class GameWindow < Gosu::Window
 
 private
   def draw_game_entity game_entity
-    image_from_cache(game_entity).draw_rot(game_entity.shape.body.p.x, game_entity.shape.body.p.y, ZOrder::Player, game_entity.shape.body.a.radians_to_gosu, 0.5, 0.5, game_entity.scale, game_entity.scale)
+    image_from_cache(game_entity).draw_rot(game_entity.x, game_entity.y, ZOrder::Player, game_entity.a, 0.5, 0.5, game_entity.scale, game_entity.scale)
   end
 
   def image_from_cache game_entity
@@ -123,5 +124,8 @@ private
   end
 end
 
-window = GameWindow.new
+DRb.start_service
+game_server = DRbObject.new nil, ARGV.shift
+
+window = GameWindow.new game_server
 window.show

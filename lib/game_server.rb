@@ -1,3 +1,4 @@
+require 'chipmunk'
 require 'lib/player'
 require 'lib/asteroid'
 require 'lib/bullet'
@@ -7,6 +8,30 @@ require 'pp'
 class Numeric
   def radians_to_vec2
     CP::Vec2.new(Math::cos(self), Math::sin(self))
+  end
+end
+
+# lightweight versions of the game entities
+class LWEntity
+  attr_accessor :x, :y, :a, :scale, :entity_id
+
+  def initialize game_entity
+    @x = game_entity.shape.body.p.x
+    @y = game_entity.shape.body.p.y
+    @a = game_entity.shape.body.a.radians_to_gosu
+    @scale = game_entity.scale
+    @entity_id = game_entity.entity_id
+  end
+end
+
+class LWPlayerEntity < LWEntity
+  attr_accessor :score, :lives
+
+  def initialize game_entity
+    super(game_entity)
+
+    @score = game_entity.score
+    @lives = game_entity.lives
   end
 end
 
@@ -49,34 +74,53 @@ class GameServer
   end
 
   def get_game_state
-    {
-        :asteroids => @asteroids,
-        :players => @players,
-        :bullets => @bullets
+    @last_game_state = {
+        :asteroids => @asteroids.map {|game_entity| LWEntity.new game_entity },
+        :players => @players.map {|game_entity| LWPlayerEntity.new game_entity },
+        :bullets => @bullets.map {|game_entity| LWEntity.new game_entity }
     }
   end
 
   def player_shoot player
-    add_bullet player.shoot
+    # dodgy temporary hack for Drb!
+    player = @players[0]
+
+    bullet = player.shoot
+    add_bullet bullet
   end
 
   def player_accelerate player
+    # dodgy temporary hack for Drb!
+    player = @players[0]
+
     player.accelerate
   end
 
   def player_turn_left player
+    # dodgy temporary hack for Drb!
+    player = @players[0]
+
     player.turn_left
   end
 
   def player_turn_right player
+    # dodgy temporary hack for Drb!
+    player = @players[0]
+
     player.turn_right
   end
 
   def player_boost player
+    # dodgy temporary hack for Drb!
+    player = @players[0]
+
     player.boost
   end
 
   def player_reverse player
+    # dodgy temporary hack for Drb!
+    player = @players[0]
+
     player.reverse
   end
 private
@@ -139,7 +183,7 @@ private
   end
 
   def add_player
-    player = Player.new(self, "media/Starfighter.bmp", 50, 50, @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, 0.5)
+    player = Player.new("media/Starfighter.bmp", 50, 50, @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, 0.5)
     player.warp(CP::Vec2.new(GAME_WINDOW_WIDTH / 2.0, GAME_WINDOW_HEIGHT / 2.0))
     add_game_entity_to_shape_lookup player
 
@@ -151,7 +195,7 @@ private
     asteroids = (1 .. 3).collect do |index|
       asteroid_image_name = "media/asteroid-#{index}.bmp"
       #puts "asteroid_image_name (#{asteroid_image_name})"
-      asteroid = Asteroid.new(self, asteroid_image_name, 100, 100, @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, 1.0)
+      asteroid = Asteroid.new(asteroid_image_name, 100, 100, @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, 1.0)
 
       asteroid.warp(CP::Vec2.new(rand(GAME_WINDOW_WIDTH), rand(GAME_WINDOW_HEIGHT)))
       asteroid.random_rotation
@@ -196,8 +240,8 @@ private
       @asteroids.delete asteroid_to_split
       asteroid_to_split.suicide
 
-        # make clones, which has the magic side-effect of adding
-        # the new asteroids to the space
+      # make clones, which has the magic side-effect of adding
+      # the new asteroids to the space
       #add_game_entity_to_shape_lookup asteroid_to_split.mini_me
       asteroid_1 = asteroid_to_split.mini_me
       if !asteroid_1.nil?
