@@ -3,8 +3,8 @@ class Bullet < GameEntity
 
   attr :player
 
-  def initialize(player, window, image_name, space, max_x_coord, max_y_coord, scale)
-    super(window, image_name, space, max_x_coord, max_y_coord, scale)
+  def initialize(player, window, image_name, width, height, space, max_x_coord, max_y_coord, scale)
+    super(window, image_name, width, height, space, max_x_coord, max_y_coord, scale)
 
     @player = player
   end

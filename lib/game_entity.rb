@@ -9,19 +9,18 @@ class GameEntity
   SUBSTEPS = 6
 
   attr :shape
+  attr_accessor :entity_id
+  attr_accessor :scale
 
-  def initialize(window, image_name, space, max_x_coord, max_y_coord, scale)
+  def initialize(window, entity_id, width, height, space, max_x_coord, max_y_coord, scale)
+    @width = width
+    @height = height
     @scale = scale
     @window = window
     @space = space
 
-    if !image_name.nil?
-      @image_name = image_name
-      @image = Gosu::Image.new(@window, image_name, false)
-
-      if @image.nil?
-        raise "nil image passed"
-      end
+    if !entity_id.nil?
+      @entity_id = entity_id
     end
 
     @body = CP::Body.new(50 * (scale ** 2), 50 * (scale ** 2))
@@ -60,7 +59,7 @@ class GameEntity
       return nil
     end
 
-    new_entity = self.class.new @window, @image_name, @space, @max_x_coord, @max_y_coord, mini_me_scale
+    new_entity = self.class.new @window, @entity_id, @width, @height, @space, @max_x_coord, @max_y_coord, mini_me_scale
     new_entity.shape.body.p = @body.p
     new_entity.shape.body.t = @body.t
     new_entity.shape.body.v = @body.v
@@ -71,7 +70,7 @@ class GameEntity
   def create_collision_shape
     @circle_offset = CP::Vec2.new(0,0)
 
-    shape_radius = (((@image.width > @image.height) ? @image.width : @image.height) / 2) * @scale
+    shape_radius = (((@width > @height) ? @width : @height) / 2) * @scale
     @shape = CP::Shape::Circle.new(@body, shape_radius, @circle_offset)
 
     # The collision_type of a shape allows us to set up special collision behavior
@@ -125,10 +124,6 @@ class GameEntity
   def validate_position
     l_position = CP::Vec2.new(@shape.body.p.x % @max_x_coord, @shape.body.p.y % @max_y_coord)
     @shape.body.p = l_position
-  end
-
-  def draw
-    @image.draw_rot(@shape.body.p.x, @shape.body.p.y, ZOrder::Player, @shape.body.a.radians_to_gosu, 0.5, 0.5, @scale, @scale)
   end
 
   def random_rotation

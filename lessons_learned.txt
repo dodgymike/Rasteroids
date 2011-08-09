@@ -37,6 +37,8 @@ ruby lib: https://github.com/jlnr/gosu/wiki/Ruby-Chipmunk-Integration
   - 'shapes' are crucial - define collision boundaries
   - circle 'shapes' are quite usable, poly 'shapes' require some thinking
   - don't forget to assign a shape 'type', otherwise collision functions won't work
+  - always get two collision events
+    - possibly need to move objects apart manually?
 
 - stuff I figured out/dodgy naming conventions
   - body.a is object rotation angle in radians
@@ -44,8 +46,17 @@ ruby lib: https://github.com/jlnr/gosu/wiki/Ruby-Chipmunk-Integration
   - body.p is the position
   - vector manipulation helpers difficult to use/figure out due to poor documentation
 
+
+Drb:
+built-in
+
+- really simple
+- follow http://segment7.net/projects/ruby/drb/introduction.html
+- not sure about chipmunk classes across drb - maybe use drbundumped?
+
 General:
 - console output is the enemy of performance - especially pp in the event loop
+- try your best to keep game logic separate from display logic for multiplayer games
 
 Stuff I didn't get to:
 - http://rubydoc.info/github/ippa/chingu/master/frames OpenGL 2D?
@@ -54,3 +65,4 @@ Stuff I didn't get to:
 - proper testing
   - it's *difficult*
   - no excuses, but lots of glue required
+
