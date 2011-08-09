@@ -15,11 +15,13 @@ class GameEntity
     @window = window
     @space = space
 
-    @image_name = image_name
-    @image = Gosu::Image.new(@window, image_name, false)
+    if !image_name.nil?
+      @image_name = image_name
+      @image = Gosu::Image.new(@window, image_name, false)
 
-    if @image.nil?
-      raise "nil image passed"
+      if @image.nil?
+        raise "nil image passed"
+      end
     end
 
     @body = CP::Body.new(50 * (scale ** 2), 50 * (scale ** 2))
@@ -28,16 +30,21 @@ class GameEntity
     @body.add_to_space(space)
     @shape.add_to_space(space)
 
-    @shape.body.p = CP::Vec2.new(0.0, 0.0) # position
+
+    @max_x_coord = max_x_coord
+    @max_y_coord = max_y_coord
+
+    reset
+  end
+
+  def reset
+    @shape.body.p = CP::Vec2.new(@max_x_coord / 2.0, @max_y_coord / 2.0) # position
     @shape.body.v = CP::Vec2.new(0.0, 0.0) # velocity
 
     # Keep in mind that down the screen is positive y, which means that PI/2 radians,
     # which you might consider the top in the traditional Trig unit circle sense is actually
     # the bottom; thus 3PI/2 is the top
     @shape.body.a = (3*Math::PI/2.0) # angle in radians; faces towards top of screen
-
-    @max_x_coord = max_x_coord
-    @max_y_coord = max_y_coord
   end
 
   def suicide
@@ -59,10 +66,6 @@ class GameEntity
     new_entity.shape.body.v = @body.v
 
     new_entity
-  end
-
-  def collision_name
-    raise "Should be overloaded"
   end
 
   def create_collision_shape

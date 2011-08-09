@@ -19,6 +19,7 @@ Chipmunk:
 library install: http://wiki.slembcke.net/main/published/Chipmunk
 ruby lib: https://github.com/jlnr/gosu/wiki/Ruby-Chipmunk-Integration
 docs: http://files.slembcke.net/chipmunk/release/ChipmunkLatest-Docs/
+better docs: http://beoran.github.com/chipmunk/
 
   Ubuntu:
 	install GLUT, libxmu, cmake
