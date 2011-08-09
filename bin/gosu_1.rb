@@ -25,7 +25,7 @@ class GameWindow < Gosu::Window
 
   def initialize
     super(GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, false)
-    self.caption = "Gosu Tutorial Game"
+    self.caption = "Capetown.rb Asteroids"
 
     @shape_to_game_entity = {}
 
@@ -39,7 +39,8 @@ class GameWindow < Gosu::Window
     @asteroids = create_asteroids()
     @asteroids += create_asteroids
 
-    add_player
+    @players = []
+    @players << add_player
 
     @bullets = []
 
@@ -47,44 +48,15 @@ class GameWindow < Gosu::Window
     @players_with_collisions = []
     @bullets_with_collisions = []
 
-    @space.add_collision_func(Player::COLLISION_NAME, Asteroid::COLLISION_NAME) do |player_shape, asteroid_shape|
-      puts "Collision between player (#{player_shape}) and asteroid (#{asteroid_shape})"
-
-      @lives -= 1
-      @score -= 10
-      @asteroids_to_split << get_game_entity_by_shape(asteroid_shape)
-      @players_with_collisions << get_game_entity_by_shape(player_shape)
-    end
-
-    @space.add_collision_func(Bullet::COLLISION_NAME, Asteroid::COLLISION_NAME) do |bullet_shape, asteroid_shape|
-      puts "Collision between bullet (#{bullet_shape}) and asteroid (#{asteroid_shape})"
-
-      @score += 10
-      @asteroids_to_split << get_game_entity_by_shape(asteroid_shape)
-      @bullets_with_collisions << get_game_entity_by_shape(bullet_shape)
-    end
-
-    @space.add_collision_func(Bullet::COLLISION_NAME, Player::COLLISION_NAME) do |bullet_shape, player_shape|
-      puts "Collision between bullet (#{bullet_shape}) and player (#{player_shape})"
-
-      @lives -= 1
-      @score -= 10
-      @bullets_with_collisions << get_game_entity_by_shape(bullet_shape)
-      @players_with_collisions << get_game_entity_by_shape(player_shape)
-    end
-
-    @space.add_collision_func(Bullet::COLLISION_NAME, Bullet::COLLISION_NAME) do |bullet_shape_1, bullet_shape_2|
-      puts "Collision between bullet (#{bullet_shape_1}) and bullet_shape_2 (#{bullet_shape_2})"
-
-      @bullets_with_collisions << get_game_entity_by_shape(bullet_shape_1)
-      @bullets_with_collisions << get_game_entity_by_shape(bullet_shape_2)
-    end
+    setup_collision_callbacks()
 
     @dt = (1.0/60.0)
 
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
 
-    #pp @shape_to_game_entity
+    # a 'keypress' must last at least 200ms
+    @min_keypress_time = 0.200
+    @last_keypress_time = Time.now.to_f
   end
 
   def update
@@ -102,7 +74,9 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-    @player.draw
+    @players.each do |player|
+      player.draw
+    end
     @asteroids.each do |asteroid|
       asteroid.draw
     end
@@ -112,58 +86,120 @@ class GameWindow < Gosu::Window
 
     @background_image.draw(0, 0, 0);
 
-    @font.draw("Score: #{@score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xffffff00)
-    @font.draw("Lives: #{@lives}", GAME_WINDOW_WIDTH - 150, 10, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+    @players.each_with_index do |player, index|
+      info_y_position = (index * 12) + 10
+      @font.draw("Score: #{player.score}", 10, info_y_position, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+      @font.draw("Lives: #{player.lives}", GAME_WINDOW_WIDTH - 150, info_y_position, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+    end
   end
 
 private
+  def setup_collision_callbacks
+    @space.add_collision_func(Player::COLLISION_NAME, Asteroid::COLLISION_NAME) do |player_shape, asteroid_shape|
+      puts "Collision between player (#{player_shape}) and asteroid (#{asteroid_shape})"
+
+      player = get_game_entity_by_shape(player_shape)
+      player.lives -= 1
+      player.score -= 10
+      @players_with_collisions << player
+
+      @asteroids_to_split << get_game_entity_by_shape(asteroid_shape)
+    end
+
+    @space.add_collision_func(Bullet::COLLISION_NAME, Asteroid::COLLISION_NAME) do |bullet_shape, asteroid_shape|
+      puts "Collision between bullet (#{bullet_shape}) and asteroid (#{asteroid_shape})"
+
+      bullet = get_game_entity_by_shape(bullet_shape)
+      bullet.player.score += 10
+      @bullets_with_collisions << bullet
+
+      @asteroids_to_split << get_game_entity_by_shape(asteroid_shape)
+    end
+
+    @space.add_collision_func(Bullet::COLLISION_NAME, Player::COLLISION_NAME) do |bullet_shape, player_shape|
+      puts "Collision between bullet (#{bullet_shape}) and player (#{player_shape})"
+
+      # loser!
+      player = get_game_entity_by_shape(player_shape)
+      player.lives -= 1
+      player.score -= 20
+      @players_with_collisions << player
+
+      # shooter gets an extra 10 points
+      bullet = get_game_entity_by_shape(bullet_shape)
+      bullet.player.score += 10
+      @bullets_with_collisions << bullet
+    end
+
+    @space.add_collision_func(Bullet::COLLISION_NAME, Bullet::COLLISION_NAME) do |bullet_shape_1, bullet_shape_2|
+      puts "Collision between bullet (#{bullet_shape_1}) and bullet_shape_2 (#{bullet_shape_2})"
+
+      @bullets_with_collisions << get_game_entity_by_shape(bullet_shape_1)
+      @bullets_with_collisions << get_game_entity_by_shape(bullet_shape_2)
+    end
+  end
+
   def add_player
-    @player = Player.new(self, "media/Starfighter.bmp", @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, 0.5)
-    @player.warp(CP::Vec2.new(GAME_WINDOW_WIDTH / 2.0, GAME_WINDOW_HEIGHT / 2.0))
-    add_game_entity_to_shape_lookup @player
+    player = Player.new(self, "media/Starfighter.bmp", @space, GAME_WINDOW_WIDTH, GAME_WINDOW_HEIGHT, 0.5)
+    player.warp(CP::Vec2.new(GAME_WINDOW_WIDTH / 2.0, GAME_WINDOW_HEIGHT / 2.0))
+    add_game_entity_to_shape_lookup player
+
+    player
   end
 
   def add_game_entity_to_shape_lookup game_entity
-    #puts "add_game_entity_to_shape_lookup:"
-    #pp game_entity
     @shape_to_game_entity[game_entity.shape] = game_entity
   end
 
   def get_game_entity_by_shape shape
-    #puts "get_game_entity_by_shape:"
-    #pp shape
     @shape_to_game_entity[shape]
   end
 
   def handle_key_events
     if button_down? Gosu::KbLeft
-      @player.turn_left
+      @players[0].turn_left
     end
     if button_down? Gosu::KbRight
-      @player.turn_right
+      @players[0].turn_right
     end
 
     if button_down? Gosu::KbUp
       if ((button_down? Gosu::KbRightShift) || (button_down? Gosu::KbLeftShift))
-        @player.boost
+        @players[0].boost
       else
-        @player.accelerate
+        @players[0].accelerate
       end
     elsif button_down? Gosu::KbDown
-      @player.reverse
+      @players[0].reverse
     end
 
-    if button_down? Gosu::KbSpace
-      bullet = @player.shoot
-      if !bullet.nil?
-        @bullets << bullet
-        add_game_entity_to_shape_lookup(bullet)
+    # TIMED KEY PRESSES
+    # the following keypresses will only be actioned if it has been
+    # at least @min_keypress_time since the previous keypress
+    current_time = Time.now.to_f
+    last_keypress_delta = current_time - @last_keypress_time
+
+    if last_keypress_delta >= @min_keypress_time
+      @last_keypress_time = current_time
+
+      if button_down? Gosu::KbSpace
+        bullet = @players[0].shoot
+        if !bullet.nil?
+          @bullets << bullet
+          add_game_entity_to_shape_lookup(bullet)
+        end
+      end
+
+      if button_down? Gosu::KbA
+        @players << add_player
       end
     end
   end
 
   def check_object_positions
-    @player.validate_position
+    @players.each do |player|
+      player.validate_position
+    end
     @asteroids.each do |asteroid|
       asteroid.validate_position
     end
@@ -174,7 +210,9 @@ private
 
   def update_munk_space
     @space.step(@dt)
-    @player.shape.body.reset_forces
+    @players.each do |player|
+      player.shape.body.reset_forces
+    end
     @asteroids.each do |asteroid|
       asteroid.shape.body.reset_forces
     end

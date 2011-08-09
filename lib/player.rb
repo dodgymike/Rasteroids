@@ -5,26 +5,22 @@ require 'chipmunk'
 class Player < GameEntity
   COLLISION_NAME = :player
 
+  attr_accessor :score
+  attr_accessor :lives
+
+  def initialize(window, image_name, space, max_x_coord, max_y_coord, scale)
+    super(window, image_name, space, max_x_coord, max_y_coord, scale)
+
+    @score = 0
+    @lives = 10
+  end
+
   def collision_name
     COLLISION_NAME
   end
 
   def shoot
-    current_time = Time.now.to_f
-
-    if @last_bullet_time.nil? || !@last_bullet_time
-      @last_bullet_time = current_time
-    end
-
-    if current_time - @last_bullet_time <= 0.300
-      return nil
-    end
-
-    @last_bullet_time = current_time
-
-    puts "last_bullet_time (#{@last_bullet_time})"
-
-    bullet = Bullet.new @window, "media/bullet.bmp", @space, @max_x_coord, @max_y_coord, @scale
+    bullet = Bullet.new self, @window, "media/bullet.bmp", @space, @max_x_coord, @max_y_coord, @scale
 
     bullet_angle = -@shape.body.a + Math::PI / 2
     bullet_speed = 100 * @scale

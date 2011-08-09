@@ -2,7 +2,7 @@ Images:
 http://www.fotosearch.com/IMZ145/sha0002/
 http://galacticfool.com/asteroids-meteors-comets/
 
-Lessons learned while playing with Gosu:
+Gosu:
 https://github.com/jlnr/gosu/wiki/Ruby-Tutorial
 https://github.com/jlnr/gosu/wiki/Basic-Concepts
 - c bindings
@@ -13,13 +13,13 @@ https://github.com/jlnr/gosu/wiki/Basic-Concepts
 - images
   - Gimp 
     - use RGB bmp - jpg convertor doesn't work with transparent backgrounds
+- not sure about keyboard handling
+  - because we check for key down in the event loop, and not key down events, we get multiple 'key-presses'
 
 Chipmunk:
 6.0.1
 library install: http://wiki.slembcke.net/main/published/Chipmunk
 ruby lib: https://github.com/jlnr/gosu/wiki/Ruby-Chipmunk-Integration
-docs: http://files.slembcke.net/chipmunk/release/ChipmunkLatest-Docs/
-better docs: http://beoran.github.com/chipmunk/
 
   Ubuntu:
 	install GLUT, libxmu, cmake
@@ -30,12 +30,27 @@ better docs: http://beoran.github.com/chipmunk/
 - documentation for ruby bindings is not great
   - https://github.com/jlnr/gosu/blob/master/examples/ChipmunkIntegration.rb (for good examples of gosu/chipmunk integration)
   - look at c docs
+  - docs: http://files.slembcke.net/chipmunk/release/ChipmunkLatest-Docs/
+  - better docs: http://beoran.github.com/chipmunk/
 
 - collisions
   - 'shapes' are crucial - define collision boundaries
   - circle 'shapes' are quite usable, poly 'shapes' require some thinking
   - don't forget to assign a shape 'type', otherwise collision functions won't work
 
+- stuff I figured out/dodgy naming conventions
+  - body.a is object rotation angle in radians
+  - body.v is the velocity vector
+  - body.p is the position
+  - vector manipulation helpers difficult to use/figure out due to poor documentation
 
 General:
-- pp is the enemy of performance
+- console output is the enemy of performance - especially pp in the event loop
+
+Stuff I didn't get to:
+- http://rubydoc.info/github/ippa/chingu/master/frames OpenGL 2D?
+- proper setup of mass/moment
+- playing with gravity
+- proper testing
+  - it's *difficult*
+  - no excuses, but lots of glue required
