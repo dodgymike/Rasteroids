@@ -61,11 +61,14 @@ built-in
     - if that object adds itself to anything on the server side, its lifecycle is screwed
     - bullets have players, call player.shoot creates a bullet with the player as an attribute
       which is actually a drb *remote* object and is not valid/accessible locally :/
-  - while developing, *always* use a fixed URL
+- while developing, *always* use a fixed URL
+- Passing large objects around is a bad idea, possibly try DRbUndumped
+  - I wrapped the required data and passed the wrapper objects to front end
 
 General:
 - console output is the enemy of performance - especially pp in the event loop
 - try your best to keep game logic separate from display logic for multiplayer games
+- Expect occasional segfaults - probably chipmunk
 
 Stuff I didn't get to:
 - http://rubydoc.info/github/ippa/chingu/master/frames OpenGL 2D?

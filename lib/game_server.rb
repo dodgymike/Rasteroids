@@ -48,8 +48,8 @@ class GameServer
     @asteroids = create_asteroids()
     @asteroids += create_asteroids
 
+    @player_by_id = {}
     @players = []
-    @players << add_player
 
     @bullets = []
 
@@ -71,6 +71,9 @@ class GameServer
 
     # update the munk-space
     update_munk_space()
+
+    # check for game restart
+    check_game_state
   end
 
   def get_game_state
@@ -81,49 +84,60 @@ class GameServer
     }
   end
 
-  def player_shoot player
-    # dodgy temporary hack for Drb!
-    player = @players[0]
+  def join_game
+    player = add_player
+    player_id = rand(9999999999)
+
+    @player_by_id[player_id] = player
+
+    player_id
+  end
+
+  def player_shoot player_id
+    player = @player_by_id[player_id]
 
     bullet = player.shoot
     add_bullet bullet
   end
 
-  def player_accelerate player
-    # dodgy temporary hack for Drb!
-    player = @players[0]
+  def player_accelerate player_id
+    player = @player_by_id[player_id]
 
     player.accelerate
   end
 
-  def player_turn_left player
-    # dodgy temporary hack for Drb!
-    player = @players[0]
+  def player_turn_left player_id
+    player = @player_by_id[player_id]
 
     player.turn_left
   end
 
-  def player_turn_right player
-    # dodgy temporary hack for Drb!
-    player = @players[0]
+  def player_turn_right player_id
+    player = @player_by_id[player_id]
 
     player.turn_right
   end
 
-  def player_boost player
-    # dodgy temporary hack for Drb!
-    player = @players[0]
+  def player_boost player_id
+    player = @player_by_id[player_id]
 
     player.boost
   end
 
-  def player_reverse player
-    # dodgy temporary hack for Drb!
-    player = @players[0]
+  def player_reverse player_id
+    player = @player_by_id[player_id]
 
     player.reverse
   end
 private
+  def check_game_state
+    # no asteroids left - add some
+    if @asteroids.size <= 0
+      @asteroids += create_asteroids
+      @asteroids += create_asteroids
+    end
+  end
+
   def add_game_entity_to_shape_lookup game_entity
     @shape_to_game_entity[game_entity.shape] = game_entity
   end
@@ -187,9 +201,10 @@ private
     player.warp(CP::Vec2.new(GAME_WINDOW_WIDTH / 2.0, GAME_WINDOW_HEIGHT / 2.0))
     add_game_entity_to_shape_lookup player
 
+    @players << player
+
     player
   end
-
 
   def create_asteroids
     asteroids = (1 .. 3).collect do |index|

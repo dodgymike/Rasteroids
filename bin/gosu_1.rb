@@ -31,6 +31,7 @@ class GameWindow < Gosu::Window
     @last_keypress_time = Time.now.to_f
 
     @game_server = game_server
+    @player_id = @game_server.join_game
 
     @image_cache = {}
 
@@ -86,20 +87,20 @@ private
     local_player = @game_state[:players][0]
 
     if button_down? Gosu::KbLeft
-      @game_server.player_turn_left local_player
+      @game_server.player_turn_left @player_id
     end
     if button_down? Gosu::KbRight
-      @game_server.player_turn_right local_player
+      @game_server.player_turn_right @player_id
     end
 
     if button_down? Gosu::KbUp
       if ((button_down? Gosu::KbRightShift) || (button_down? Gosu::KbLeftShift))
-        @game_server.player_boost local_player
+        @game_server.player_boost @player_id
       else
-        @game_server.player_accelerate local_player
+        @game_server.player_accelerate @player_id
       end
     elsif button_down? Gosu::KbDown
-      @game_server.player_reverse local_player
+      @game_server.player_reverse @player_id
     end
 
     # TIMED KEY PRESSES
@@ -112,7 +113,7 @@ private
       @last_keypress_time = current_time
 
       if button_down? Gosu::KbSpace
-        @game_server.player_shoot local_player
+        @game_server.player_shoot @player_id
       end
     end
   end
